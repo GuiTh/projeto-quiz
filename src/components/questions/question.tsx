@@ -1,29 +1,43 @@
+import { useEffect, useState } from "react";
+
 // Question
 type question = {
-    question: any,
+    question: {
+        rightAnswer: any,
+        allOptions: any[]
+    },
     userAnswer: string,
     handleAnswer: string
 }
 
 function Question({ question, userAnswer, handleAnswer }: question) {
-    const flag = question.rightAnswer?.flag
-    const options = question?.allOptions
-    const arr: any[] = []
+    console.log('oi')
+    const [selectCountry, setSelectCountry] = useState(0);
 
-    function randomArrayIndexPicker(obj: any) {
-        for (let key in obj) {
-            arr.push(obj[Math.ceil(Math.random() * arr.length - 1)])
-        };
-        console.log(Math.ceil(Math.random() * (arr.length - 1)))
+    const arr: any[] = [];
+    const flag = question.rightAnswer.flag;
+
+    const result = question.allOptions
+    for (let key in result) {
+        arr.push(result[key])
+    };
+
+    const shufledArray = arr.map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value)
+
+    const validateRightAnswer = (selectCountry: any) => {
+        setSelectCountry(selectCountry)
     }
-    randomArrayIndexPicker(options)
+
     return <div className="question">
         <div>Qual o nome do pais dessa bandeira oh seu comedia?: {flag}</div>
-        {/* <div>
-            {randomArrayIndexPicker(options).map((name) => {
-                return <p>{name}</p>
-            })}
-        </div> */}
+
+        {shufledArray.map((name: any, index: number) => (
+            <button key={index} onClick={validateRightAnswer} value={name} >
+                <p>{name}</p>
+            </button>
+        ))}
     </div>;
 }
 
